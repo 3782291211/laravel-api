@@ -75,4 +75,59 @@ class UserTest extends TestCase
             );
     }
 
+    public function test_get_logout_destroys_api_token_and_returns_confirmation_message()
+    {
+        $loginConf = $this->postJson('/api/login/', [
+            "email" => "alex_pp7@randomemail.com",
+            "password" => "uttdis8766",
+        ]);
+        $id = $loginConf['user']['id'];
+
+        $user = User::find($id);
+        $this->actingAs($user);
+
+        $response = $this->get('/api/logout/' . $id);
+        $this->assertDatabaseMissing('personal_access_tokens', [
+            'token' => $loginConf['token'],
+        ]);
+        $response
+            ->assertStatus(200)
+            ->assertExactJson(['msg' => 'Logged out.']);
+    }
+
+    public function test_post_rejects_signup_if_email_is_already_taken()
+    {
+        $newUser = [
+            "name" => "Alex Pitfall",
+		    "email" => "alex_pp7@randomemail.com",
+		    "password" => "uttdis8766",
+		    "password_confirmation" => "uttdis8766"
+        ];
+
+        $response = $this->postJson('/api/signup', $newUser);
+
+        $response
+            ->assertStatus(422)
+            ->assertJson(fn (AssertableJson $json) =>
+                $json->where('message', 'The email has already been taken.')
+                     ->etc()
+            );
+    }
+
+    public function test_post_rejects_signup_if_password_is_too_short()
+    {
+        $newUser = [
+            "name" => "Rebecca Biers",
+		    "email" => "bec2005@kmail.co.uk",
+		    "password" => "234",
+		    "password_confirmation" => "234"
+        ];
+
+        $response = $this->postJson('/api/signup', $newUser);
+
+        $response
+            ->assertStatus(422)
+            ->assertInvalid(['password' => 'The password field must be at least 10 characters']);
+    }
+
 }
