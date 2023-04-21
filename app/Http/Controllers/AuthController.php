@@ -36,4 +36,37 @@ class AuthController extends Controller
 
         return response($response, 201);
     }
+
+    public function login(Request $request) : Response
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string'
+        ]);
+
+        try 
+        {
+            $user = User::where('email', $request->email)->firstOrFail();
+
+            if (!Hash::check($request->password, $user->password))
+            {
+                return response(['msg' => "Incorrect password"], 400);
+            }
+            else
+            {
+                $token = $user->createToken('appToken')->plainTextToken;
+                return response(['user' => $user, 'token' => $token], 200);
+            }
+        } 
+        catch (ModelNotFoundException $e) 
+        {
+            return response(['msg' => "Invalid email"], 404);
+        }
+    }
+
+    public function logout($id) : Response
+    {
+        User::find($id)->tokens()->delete();
+        return response(['msg' => 'Logged out.'], 200);
+    }
 }
