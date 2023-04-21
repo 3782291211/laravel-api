@@ -12,6 +12,50 @@ use App\Http\Resources\ExamCollection;
 class ExamController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        return new ExamCollection(Exam::paginate(40));
+
+        # the all() method on our model gets all of the models from the database
+        // return new ProductCollection(Product::paginate(10));
+        //return Product::all();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     * POST request (Create)
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'slug' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
+        $exams = DB::table('exams')->get();
+
+        if (
+            $exams->contains('name', $request->name)
+            && $exams->contains('description', $request->description)
+            && $exams->contains('slug', $request->slug)
+            && $exams->contains('price', $request->price)
+            )
+        {
+            return response()->json([
+                'msg' => 'Exam already exists.'
+            ], 400);
+        }
+        else
+        {
+            return Exam::create($request->all());
+        }
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(string $id)
@@ -27,7 +71,7 @@ class ExamController extends Controller
      */
     public function search(string $name)
     {
-        return Exam::where('name', 'like', '%' . $name . '%')->get();
+        return Exam::where('candidate_name', 'like', '%' . $name . '%')->get();
     }
 
     /**
