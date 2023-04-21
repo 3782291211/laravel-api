@@ -30,18 +30,22 @@ class ExamController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
-            'slug' => 'required|string',
-            'price' => 'required|numeric',
+            "title" => 'required|string',
+            "description" => 'required|string',
+            "candidate_id" => 'required|numeric',
+            "candidate_name" => 'required|string',
+            "date" => 'required|date',
+            "location_name" => 'required|string',
+            "latitude" => 'required|decimal:0,25',
+            "longitude" => 'required|decimal:0,25'
         ]);
-
+        
         $exams = DB::table('exams')->get();
 
         if (
-            $exams->contains('name', $request->name)
+            $exams->contains('candidate_name', $request->candidate_name)
+            && $exams->contains('date', $request->date)
             && $exams->contains('description', $request->description)
-            && $exams->contains('slug', $request->slug)
             && $exams->contains('price', $request->price)
             )
         {
