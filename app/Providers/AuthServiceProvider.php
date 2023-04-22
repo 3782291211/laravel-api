@@ -25,7 +25,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('view-all-exams', fn (User $user) => 
+        Gate::define('view-exams', fn (User $user) => 
+            Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
+        );
+
+        Gate::define('view-users', fn (User $user) => 
             Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
         );
 
@@ -33,8 +37,12 @@ class AuthServiceProvider extends ServiceProvider
             Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
         );
 
-        Gate::define('update-exam', fn (User $user, Exam $exam) => 
-            $user->id === $exam->candidate_id ? Response::allow() : Response::deny()
+        Gate::define('update-exam', fn (User $user, int $candidateId) => 
+            $user->id === $candidateId || Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
+        );
+
+        Gate::define('delete-exam', fn (User $user, int $candidateId) => 
+            $user->id === $candidateId || Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
         );
     }
 }
