@@ -59,7 +59,27 @@ class AdminTest extends TestCase
     }
 
 
-    public function test_get_allows_exams_to_be_sorted_in_asc_order(): void
+    public function test_get_returns_single_exam()
+    {
+        $response = $this->get('/api/exams/3');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) => 
+                        $json->has('exam', fn (AssertableJson $json) =>
+                            $json->hasAll(['id', 'title', 'description', 'candidateId', 'candidateName', 'date', 'locationName', 'longitude', 'latitude'])
+                        )
+                  );
+    }
+
+
+    public function test_get_returns_404_for_nonexistent_exam()
+    {
+        $response = $this->get('/api/exams/3333333');
+        $response->assertStatus(404)
+                 ->assertExactJson(['msg' => 'Not found.']);
+    }
+
+
+    public function test_get_allows_exams_to_be_sorted_in_asc_date_order(): void
     {
          $examsFromDb = Exam::orderBy('date', 'asc')->get()->toArray();
          $datesFromDb = array_slice(
@@ -88,7 +108,7 @@ class AdminTest extends TestCase
     }
 
 
-    public function test_get_allows_exams_to_be_filtered_by_name()
+    public function test_get_allows_exams_to_be_filtered_by_candidate_name()
     {
         Exam::factory()->count(12)->create(['candidate_name' => 'Ziupard Charles']);
         $response = $this->get('/api/exams/search/ziupard');
@@ -115,7 +135,7 @@ class AdminTest extends TestCase
         $response = $this->get('/api/users');
         $response
             ->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json->has(11)
+            ->assertJson(fn (AssertableJson $json) => $json->has('users', 11)
         );
     }
 
