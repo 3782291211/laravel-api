@@ -10,17 +10,21 @@ use Illuminate\Support\Facades\Gate;
 
 class ExamController extends Controller
 {
-
-    public function index(Request $request)
+    public function examsIndex(Request $request)
     {
-        //Gate::authorize('view-all-exams');
+        if (!Gate::allows('view-exams')) {
+            return response(['msg' => 'Administrator access is required to perform this action.'], 403);
+        }
+
         $order = $request->query('order') ?? 'DESC';
         $limit = $request->query('limit') ?? 30;
         $location = $request->query('location') ?? '';
+        $date = $request->query('date') ?? '';
 
         return new ExamCollection(
             Exam::orderBy('date', $order)
                 ->where('location_name', 'like', '%' . $location . '%')
+                ->whereDate('date', 'like', '%' . $date . '%')
                 ->paginate($limit)
         );
     }
@@ -63,6 +67,11 @@ class ExamController extends Controller
     
     public function show(string $id)
     {
+        $exam = Exam::find($id);
+        if (!$exam || !Gate::allows('view-exams', $exam->candidate_id)) {
+            return response(['msg' => 'Not found.'], 404);
+        }
+
         return new ExamResource(Exam::find($id));
     }
 
@@ -82,11 +91,9 @@ class ExamController extends Controller
     public function update(Request $request, string $id)
     {
         $exam = Exam::find($id);
-        Gate::authorize('update-exam', $exam);
 
-        if (!Gate::allows('update-exam', $exam)) {
-            //To throw an exception, use abort(403);
-            return response(['msg' => 'Administrator access is required to perform this action.'], 403);
+        if (!$exam || !Gate::allows('update-exam', $exam->candidate_id)) {
+            return response(['msg' => 'Not found.'], 404);
         }
 
         $exam->update($request->all());
@@ -96,6 +103,12 @@ class ExamController extends Controller
     
     public function destroy(string $id)
     {
+        $exam = Exam::find($id);
+
+        if (!$exam || !Gate::allows('delete-exam', $exam->candidate_id)) {
+            return response(['msg' => 'Not found.'], 404);
+        }
+
         return Exam::destroy($id);
     }
 }
