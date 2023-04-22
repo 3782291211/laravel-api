@@ -1,6 +1,6 @@
 # Laravel & PHP back end project
 
-Welcome to another one of my API projects. For this one, I decided to go with Laravel and took advantage of its user authentication and authorisation features, as well as its integration testing capabilites to fully test the API's features.
+Welcome to another one of my API projects. For this one, I decided to go with Laravel and took advantage of its user authentication and authorisation features, built-in CLI tool and object-relational mapper, as well as its integration testing capabilites to fully test the API's features.
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
