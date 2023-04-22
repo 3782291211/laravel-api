@@ -12,6 +12,8 @@ class ExamController extends Controller
 {
     public function examsIndex(Request $request)
     {
+        return new ExamCollection(Exam::paginate(30));
+        /*
         if (!Gate::allows('view-exams')) {
             return response(['msg' => 'Administrator access is required to perform this action.'], 403);
         }
@@ -26,7 +28,7 @@ class ExamController extends Controller
                 ->where('location_name', 'like', '%' . $location . '%')
                 ->whereDate('date', 'like', '%' . $date . '%')
                 ->paginate($limit)
-        );
+        );*/
     }
 
 
