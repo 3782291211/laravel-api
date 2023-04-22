@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->string('candidate_id')->nullable(); #this makes the field optional
+            $table->unsignedInteger('candidate_id')->nullable(); #this makes the field optional
             $table->string('candidate_name');
             $table->string('location_name');
-            $table->string('date');
+            $table->date('date');
             $table->decimal('longitude', $precision = 12, $scale = 7);
             $table->decimal('latitude', $precision = 12, $scale = 7);
         });
