@@ -20,10 +20,10 @@ class ExamFactory extends Factory
         return [
             'title' => 'VICTVS' . fake()->randomDigit(),
             'description' => 'VICTVS Exam ' . fake()->randomDigit(),
-            'candidate_id' => fake()->randomElement(User::pluck('id')),
+            'candidate_id' => fake()->randomDigitNotZero(User::pluck('id')),
             'candidate_name' => fake()->randomElement(User::pluck('name')),
             'location_name' => fake()->city(),
-            'date' => fake()->date($format = 'Y-m-d', $max = 'now') . ' ' . fake()->time($format = 'H:i:s', $max = 'now') ,
+            'date' => fake()->dateTimeBetween('+0 days', '+4 years'),
             'longitude' => fake()->unique()->randomFloat(7, 0.0100000, 500.000000000),
             'latitude' => fake()->unique()->randomFloat(7, 0.0100000, 500.000000000),
         ];
