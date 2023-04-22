@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -67,6 +66,6 @@ class AuthController extends Controller
     public function logout($id) : Response
     {
         User::find($id)->tokens()->delete();
-        return response(['msg' => 'Logged out.'], 200);
+        return response(['msg' => 'You are now logged out.'], 200);
     }
 }
