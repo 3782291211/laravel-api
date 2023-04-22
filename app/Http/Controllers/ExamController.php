@@ -4,31 +4,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Exam;
-use PHPUnit\Framework\Constraint\JsonMatches;
 use App\Http\Resources\ExamResource;
 use App\Http\Resources\ExamCollection;
-//use App\Utils\ProductQuery;
+use Illuminate\Support\Facades\Gate;
 
 class ExamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
-        return new ExamCollection(Exam::paginate(40));
+        //Gate::authorize('view-all-exams');
+        $order = $request->query('order') ?? 'DESC';
+        $limit = $request->query('limit') ?? 30;
+        $location = $request->query('location') ?? '';
 
-        # the all() method on our model gets all of the models from the database
-        // return new ProductCollection(Product::paginate(10));
-        //return Product::all();
+        return new ExamCollection(
+            Exam::orderBy('date', $order)
+                ->where('location_name', 'like', '%' . $location . '%')
+                ->paginate($limit)
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * POST request (Create)
-     */
+
     public function store(Request $request)
     {
+        Gate::authorize('create-exam');
+
         $request->validate([
             "title" => 'required|string',
             "description" => 'required|string',
@@ -50,7 +51,7 @@ class ExamController extends Controller
             )
         {
             return response()->json([
-                'msg' => 'Exam already exists.'
+                'msg' => 'Candidate is already booked in for an exam at this time.'
             ], 400);
         }
         else
@@ -59,13 +60,10 @@ class ExamController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(string $id)
     {
         return new ExamResource(Exam::find($id));
-        //return Product::find($id);
     }
 
     /**
@@ -75,22 +73,27 @@ class ExamController extends Controller
      */
     public function search(string $name)
     {
-        return Exam::where('candidate_name', 'like', '%' . $name . '%')->get();
+        return new ExamCollection(
+            Exam::where('candidate_name', 'like', '%' . $name . '%')->get()
+        );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    
     public function update(Request $request, string $id)
     {
         $exam = Exam::find($id);
+        Gate::authorize('update-exam', $exam);
+
+        if (!Gate::allows('update-exam', $exam)) {
+            //To throw an exception, use abort(403);
+            return response(['msg' => 'Administrator access is required to perform this action.'], 403);
+        }
+
         $exam->update($request->all());
         return $exam;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    
     public function destroy(string $id)
     {
         return Exam::destroy($id);
