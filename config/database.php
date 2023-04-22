@@ -16,7 +16,7 @@ return [
     */
 
     //'default' => env('DB_CONNECTION', $environment ? 'sqlite' : 'pgsql'),
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => env('DB_CONNECTION', 'sqlite'),
 
     /*
     |--------------------------------------------------------------------------
@@ -35,6 +35,13 @@ return [
     */
 
     'connections' => [
+
+        'testing' => [
+            'driver' => 'sqlite',
+            'database' => '/home/g398g361/northcoders/projects/laravel-api/database/test-database.sqlite',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+            // more details on your testing database
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
