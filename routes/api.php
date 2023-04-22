@@ -20,12 +20,12 @@ use App\Http\Controllers\AuthController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/signup', [AuthController::class, 'signup']);
 
+Route::get('/exams', [ExamController::class, 'examsIndex']);
 
 // Protected routes - require tokens
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/exams/{id}', [ExamController::class, 'show']);
     Route::get('/exams/search/{name}', [ExamController::class, 'search']);
-    Route::get('/exams', [ExamController::class, 'examsIndex']);
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}/exams', [UserController::class, 'userExams']);
     Route::post('/exams', [ExamController::class, 'store']);

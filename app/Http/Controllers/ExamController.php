@@ -12,9 +12,9 @@ class ExamController extends Controller
 {
     public function examsIndex(Request $request)
     {
-        if (!Gate::allows('view-exams')) {
+        /*if (!Gate::allows('view-exams')) {
             return response(['msg' => 'Administrator access is required to perform this action.'], 403);
-        }
+        }*/
 
         $order = $request->query('order') ?? 'DESC';
         $limit = $request->query('limit') ?? 30;
