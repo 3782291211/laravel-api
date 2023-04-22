@@ -25,7 +25,7 @@ class ExamController extends Controller
         return new ExamCollection(
             Exam::orderBy('date', $order)
                 ->when($location, fn (Builder $query, string $location) => 
-                    $query->where('location_name', 'like', '%' . $location . '%')
+                    $query->where(strtolower('location_name'), 'like', '%' . strtolower($location) . '%')
                 )
                 ->when($date, fn (Builder $query, string $date) => 
                     $query->whereDate('date', 'like', '%' . $date . '%')
