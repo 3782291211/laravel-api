@@ -130,4 +130,78 @@ class UserTest extends TestCase
             ->assertInvalid(['password' => 'The password field must be at least 10 characters']);
     }
 
+    public function test_post_rejects_signup_if_passwords_do_not_match()
+    {
+        $newUser = [
+            "name" => "Rebecca Biers",
+		    "email" => "bec2005@kmail.co.uk",
+		    "password" => "2343425dfgdfgdfg",
+		    "password_confirmation" => "234serxdfsdfds"
+        ];
+
+        $response = $this->postJson('/api/signup', $newUser);
+
+        $response
+            ->assertStatus(422)
+            ->assertInvalid(['password' => 'The password field confirmation does not match']);
+    }
+
+    public function test_post_rejects_login_if_email_does_not_exist_in_database()
+    {
+        $existingUser = [
+		    "email" => "bec2005@kmail.co.uk",
+		    "password" => "2343425dfgdfgdfg"
+        ];
+
+        $response = $this->postJson('/api/login', $existingUser);
+
+        $response
+            ->assertStatus(404)
+            ->assertExactJson(['msg' => 'Invalid email']);
+    }
+
+    public function test_post_rejects_login_if_password_is_incorrect()
+    {
+        $existingUser = [
+		    "email" => "alex_pp7@randomemail.com",
+		    "password" => "uttdis8766d",
+        ];
+
+        $response = $this->postJson('/api/login', $existingUser);
+
+        $response
+            ->assertStatus(400)
+            ->assertExactJson(['msg' => 'Incorrect password']);
+    }
+
+    public function test_post_forbids_access_to_unauthenticated_user()
+    {
+        $requestBody =   [
+            "title" => "VICTVS15",
+            "description" => "VICTVS Exam 15",
+            "candidate_id" => 0,
+            "candidate_name" => "Wilmers",
+            "date" => "05/05/2023 14:30:00",
+            "location_name" => "London",
+            "latitude" => 51.50374306483545,
+            "longitude" => -0.14074641294861687
+        ];
+
+        $response = $this->postJson('/api/exams', $requestBody);
+        $response
+            ->assertStatus(401)
+            ->assertExactJson(['message' => 'Unauthenticated.']);
+    }
+
+    public function test_put_forbids_access_to_unauthenticated_user()
+    {
+        $requestBody = [
+            'description' => 'new value'
+        ];
+
+        $response = $this->putJson('/api/exams/4', $requestBody);
+        $response
+            ->assertStatus(401)
+            ->assertExactJson(['message' => 'Unauthenticated.']);
+    }
 }
