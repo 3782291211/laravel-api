@@ -15,8 +15,7 @@ return [
     |
     */
 
-    //'default' => env('DB_CONNECTION', $environment ? 'sqlite' : 'pgsql'),
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'pgsql'),
 
     /*
     |--------------------------------------------------------------------------
