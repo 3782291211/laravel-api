@@ -23,8 +23,8 @@ class AdminTest extends TestCase
 		    "password_confirmation" => "uttdis8766ss"
         ];
 
-        $res = $this->postJson('/api/signup', $newUser);
-        Sanctum::actingAs(User::find($res['user']['id']));
+        $response = $this->postJson('/api/signup', $newUser);
+        Sanctum::actingAs(User::find($response['user']['id']));
     }
 
 
@@ -76,14 +76,37 @@ class AdminTest extends TestCase
 
     public function test_get_allows_exams_to_be_filtered_by_location(): void
     {
-        $response = $this->get('/api/exams?location=london');
+        Exam::factory()->count(7)->create(['location_name' => 'Montut']);
+        $response = $this->get('/api/exams?location=montut');
         $response->assertStatus(200)
                  ->assertJson(fn (AssertableJson $json) =>
-                        $json->has('exams', 2, fn (AssertableJson $json) =>
-                                $json->where('locationName', 'London')
+                        $json->has('exams', 7, fn (AssertableJson $json) =>
+                                $json->where('locationName', 'Montut')
                                      ->etc()
                         )->etc()
                 );
+    }
+
+
+    public function test_get_allows_exams_to_be_filtered_by_name()
+    {
+        Exam::factory()->count(12)->create(['candidate_name' => 'Ziupard Charles']);
+        $response = $this->get('/api/exams/search/ziupard');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams', 12, fn (AssertableJson $json) =>
+                                $json->where('candidateName', 'Ziupard Charles')
+                                     ->etc()
+                        )->etc()
+                );
+    }
+
+
+    public function test_get_returns_empty_array_when_searching_for_names_not_in_db()
+    {
+        $response = $this->get('/api/exams/search/374653743');
+        $response->assertStatus(200)
+                 ->assertExactJson(['exams' => []]);
     }
 
 
