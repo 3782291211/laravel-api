@@ -7,13 +7,12 @@ use App\Models\Exam;
 use App\Http\Resources\ExamResource;
 use App\Http\Resources\ExamCollection;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
 
 class ExamController extends Controller
 {
     public function examsIndex(Request $request)
     {
-        return new ExamCollection(Exam::paginate(30));
-        /*
         if (!Gate::allows('view-exams')) {
             return response(['msg' => 'Administrator access is required to perform this action.'], 403);
         }
@@ -25,10 +24,23 @@ class ExamController extends Controller
 
         return new ExamCollection(
             Exam::orderBy('date', $order)
+                ->when($location, fn (Builder $query, string $location) => 
+                    $query->where('location_name', 'like', '%' . $location . '%')
+                )
+                ->when($date, fn (Builder $query, string $date) => 
+                    $query->whereDate('date', 'like', '%' . $date . '%')
+                )
+                ->paginate($limit)
+        );
+
+        /*
+        return new ExamCollection(
+            Exam::orderBy('date', $order)
                 ->where('location_name', 'like', '%' . $location . '%')
                 ->whereDate('date', 'like', '%' . $date . '%')
                 ->paginate($limit)
-        );*/
+        );
+        */
     }
 
 
