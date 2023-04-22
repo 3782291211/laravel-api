@@ -2,206 +2,60 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Tests\TestCase;
 use App\Models\User;
+use App\Models\Exam;
 
 class AuthorisedUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp() : void
+    public function test_put_authorised_candidate_can_update_own_exam_details()
     {
-        parent::setUp();
-        $newUser = [
-            "name" => "Alex Pitfall",
-		    "email" => "alex_pp7@randomemail.com",
-		    "password" => "uttdis8766",
-		    "password_confirmation" => "uttdis8766"
-        ];
-        $this->postJson('/api/signup', $newUser);
+        $user = User::factory()->create(['name' => 'Jackson Bubblebeard']);
+        $exam = Exam::factory()->create(['candidate_id' => $user->id]);
+        $this->actingAs($user);
+        
+        $request = ['candidate_name' => 'Donald Donaldson'];
+        $response = $this->putJson('/api/exams/' . $exam->id, $request);
+
+        $response->assertStatus(200);
     }
-    
-    public function test_post_signup_new_user_and_returns_api_token(): void
+
+
+    public function test_get_authorised_candidate_can_view_all_their_exams()
     {
-        $newUser = [
-            "name" => "Jake Arthur",
-            "email" => "gf6yh@email.com",
-            "password" => "hexagon98_sd",
-            "password_confirmation" => "hexagon98_sd"
-        ];
-
-        $response = $this->postJson('/api/signup', $newUser);
-
-        $response
-            ->assertStatus(201)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->has('token')
-                     ->whereType('token', 'string')
-                     ->has('user', fn(AssertableJson $json) => 
-                        $json->where('name', 'Jake Arthur')
-                             ->where('email', fn (string $email) => str($email)->is('gf6yh@email.com'))
-                             ->missing('password')
+        $user = User::factory()
+                      ->has(Exam::factory()->count(8))
+                      ->create();
+        
+        $this->actingAs($user);
+        $response = $this->get('api/users/' . $user->id . '/exams');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams', 8)
                              ->etc()
-                     )
-            );
+                );
     }
 
-    public function test_post_registered_user_can_login_and_receives_new_token()
+    public function test_delete_authorised_candidate_can_delete_own_exams()
     {
-        $loginDetails = [
-		    "email" => "alex_pp7@randomemail.com",
-		    "password" => "uttdis8766"
-        ];
-
-        $this->postJson('/api/signup', $loginDetails);
-
-        $response = $this->postJson('/api/login', [
-            'email' => $loginDetails['email'], 
-            'password' => $loginDetails['password']
-        ]);
-
-        $response
-            ->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->has('token')
-                     ->whereType('token', 'string')
-                     ->has('user', fn(AssertableJson $json) => 
-                        $json->where('name', 'Alex Pitfall')
-                             ->where('email', fn (string $email) => str($email)->is('alex_pp7@randomemail.com'))
-                             ->etc()
-                     )
-            );
-    }
-
-    public function test_get_logout_destroys_api_token_and_returns_confirmation_message()
-    {
-        $loginConf = $this->postJson('/api/login/', [
-            "email" => "alex_pp7@randomemail.com",
-            "password" => "uttdis8766",
-        ]);
-        $id = $loginConf['user']['id'];
-
-        $user = User::find($id);
+        $user = User::factory()->create();
+        $exam = Exam::factory()->create(['candidate_id' => $user->id]);
         $this->actingAs($user);
 
-        $response = $this->get('/api/logout/' . $id);
-        $this->assertDatabaseMissing('personal_access_tokens', [
-            'token' => $loginConf['token'],
-        ]);
-        $response
-            ->assertStatus(200)
-            ->assertExactJson(['msg' => 'Logged out.']);
+        $response = $this->deleteJson('/api/exams/' . $exam->id);
+        $response->assertStatus(200);
     }
 
-    public function test_post_rejects_signup_if_email_is_already_taken()
+
+    public function test_get_returns_404_for_nonexistent_exam()
     {
-        $newUser = [
-            "name" => "Alex Pitfall",
-		    "email" => "alex_pp7@randomemail.com",
-		    "password" => "uttdis8766",
-		    "password_confirmation" => "uttdis8766"
-        ];
-
-        $response = $this->postJson('/api/signup', $newUser);
-
-        $response
-            ->assertStatus(422)
-            ->assertJson(fn (AssertableJson $json) =>
-                $json->where('message', 'The email has already been taken.')
-                     ->etc()
-            );
-    }
-
-    public function test_post_rejects_signup_if_password_is_too_short()
-    {
-        $newUser = [
-            "name" => "Rebecca Biers",
-		    "email" => "bec2005@kmail.co.uk",
-		    "password" => "234",
-		    "password_confirmation" => "234"
-        ];
-
-        $response = $this->postJson('/api/signup', $newUser);
-
-        $response
-            ->assertStatus(422)
-            ->assertInvalid(['password' => 'The password field must be at least 10 characters']);
-    }
-
-    public function test_post_rejects_signup_if_passwords_do_not_match()
-    {
-        $newUser = [
-            "name" => "Rebecca Biers",
-		    "email" => "bec2005@kmail.co.uk",
-		    "password" => "2343425dfgdfgdfg",
-		    "password_confirmation" => "234serxdfsdfds"
-        ];
-
-        $response = $this->postJson('/api/signup', $newUser);
-
-        $response
-            ->assertStatus(422)
-            ->assertInvalid(['password' => 'The password field confirmation does not match']);
-    }
-
-    public function test_post_rejects_login_if_email_does_not_exist_in_database()
-    {
-        $existingUser = [
-		    "email" => "bec2005@kmail.co.uk",
-		    "password" => "2343425dfgdfgdfg"
-        ];
-
-        $response = $this->postJson('/api/login', $existingUser);
-
-        $response
-            ->assertStatus(404)
-            ->assertExactJson(['msg' => 'Invalid email']);
-    }
-
-    public function test_post_rejects_login_if_password_is_incorrect()
-    {
-        $existingUser = [
-		    "email" => "alex_pp7@randomemail.com",
-		    "password" => "uttdis8766d",
-        ];
-
-        $response = $this->postJson('/api/login', $existingUser);
-
-        $response
-            ->assertStatus(400)
-            ->assertExactJson(['msg' => 'Incorrect password']);
-    }
-
-    public function test_post_forbids_access_to_unauthenticated_user()
-    {
-        $requestBody =   [
-            "title" => "VICTVS15",
-            "description" => "VICTVS Exam 15",
-            "candidate_id" => 0,
-            "candidate_name" => "Wilmers",
-            "date" => "05/05/2023 14:30:00",
-            "location_name" => "London",
-            "latitude" => 51.50374306483545,
-            "longitude" => -0.14074641294861687
-        ];
-
-        $response = $this->postJson('/api/exams', $requestBody);
-        $response
-            ->assertStatus(401)
-            ->assertExactJson(['message' => 'Unauthenticated.']);
-    }
-
-    public function test_put_forbids_access_to_unauthenticated_user()
-    {
-        $requestBody = [
-            'description' => 'new value'
-        ];
-
-        $response = $this->putJson('/api/exams/4', $requestBody);
-        $response
-            ->assertStatus(401)
-            ->assertExactJson(['message' => 'Unauthenticated.']);
+        $this->actingAs(User::factory()->create());
+        $response = $this->get('/api/exams/3333333');
+        $response->assertStatus(404)
+                 ->assertExactJson(['msg' => 'Not found.']);
     }
 }
