@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Exam;
 
 class UserSeeder extends Seeder
 {
@@ -15,6 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()
+            ->has(Exam::factory()->count(4))
             ->count(10)
             ->create();
     }
