@@ -2,7 +2,12 @@
 
 **[Link to live production build](https://laravel-php-api.vercel.app/public/api)**
 
-Welcome to another one of my API projects. For this project, I have written, tested and deployed a Laravel application as part of a full-stack project, taking advantage of the framework's user authentication and authorisation features, data validation, object-relational mapper, query builder and built-in CLI tool, as well as its integration testing capabilites to fully test the API's features.
+Welcome to another one of my API projects. For this project, I have written, tested and deployed a Laravel application as part of a full-stack project, taking advantage of many of the framework's powerful features including 
+- facades and helper functions,
+- user authentication and authorisation,
+- database seeding,
+- Eloquent ORM query builder,
+- advanced API testing tools.
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
@@ -81,10 +86,10 @@ First, ensure you have Composer and PHP installed in your machine.
 3) Rename your ```.env.example``` file to ```.env```, remove the variables for the default mysql connection, and ensure you add the following 3 variables:
 
         DB_CONNECTION=sqlite
-
+        DB_FOREIGN_KEYS=true
+        USE_SQLITE_SYNTAX=like
         DB_DATABASE= this needs to be the absolute path to the sqlite database located in ./database/database.sqlite, e.g. /home/username/mydocuments/laravel-api/database/database.sqlite*
 
-        DB_FOREIGN_KEYS=true
 
 4) To spin up the local development server, run the Artisan CLI command:
         
