@@ -21,7 +21,7 @@ jobs:
     - name: update composer
       run: composer update
     - name: Change permission of the artisan file
-    - run: chmod 777 artisan  
+      run: chmod 777 artisan  
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Generate key
