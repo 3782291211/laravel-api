@@ -121,6 +121,33 @@ class AdminTest extends TestCase
                 );
     }
 
+    public function test_get_allows_exams_to_be_filtered_by_date()
+    {
+        Exam::factory()->count(4)->create(['date' => '2021-12-14']);
+        $response = $this->get('/api/exams?date=2021-12-14');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams', 4, fn (AssertableJson $json) =>
+                                $json->where('date', '2021-12-14')
+                                     ->etc()
+                        )->etc()
+                );
+    }
+
+    public function test_get_allows_exams_to_be_filtered_by_date_and_location()
+    {
+        Exam::factory()->count(6)->create(['date' => '2021-12-14', 'location_name' => 'glasgow']);
+        $response = $this->get('/api/exams?date=2021-12-14&location=glasgow');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams', 6, fn (AssertableJson $json) =>
+                                $json->where('date', '2021-12-14')
+                                     ->where('locationName', 'glasgow')
+                                     ->etc()
+                        )->etc()
+                );
+    }
+
 
     public function test_get_returns_empty_array_when_searching_for_names_not_in_db()
     {
