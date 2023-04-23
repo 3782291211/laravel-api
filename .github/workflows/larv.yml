@@ -4,7 +4,7 @@ jobs:
   phpunit:
     runs-on: ubuntu-latest
     container:
-      image: kirschbaumdevelopment/laravel-test-runner:7.3
+      image: kirschbaumdevelopment/laravel-test-runner:8.2
  
     steps:
     - uses: actions/checkout@v1
@@ -13,6 +13,7 @@ jobs:
  
     - name: Install composer dependencies
       run: |
+        composer update
         composer install --no-scripts
  
     - name: Prepare Laravel Application
