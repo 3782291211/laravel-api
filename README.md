@@ -9,10 +9,12 @@ Welcome to another one of my API projects. For this project, I have written, tes
 ## What is it for?
 This API processes data related to users/candidates and their exams. For example, it allows a user to view information about exam venues/locations, dates, candidate names, and so on.
 
+
 ## An important note on access
 Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
 
 Once you have signed up or logged in, you will be issued with an API token which will need to be attached to your request headers in order to ensure full CRUD access.
+
 
 
 ## Available endpoints
@@ -34,6 +36,7 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
 
 
 
+
 ## Key product features
 - Deployed on Vercel as a 'Serverless Function', utilising a PHP runtime to handle the applications's configuration.
 - Production deployment is linked to a live PSQL database hosted remotely with a different provider.
@@ -49,8 +52,23 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
 - Relationships and schema constraints defined using Eloquent ORM's relationships tools
 - SQLite database used for development and testing.
 
-## Project directory structure
-- The app folder is where the main action is. /app/Http/controllers contains the main logic for handling 
+
+
+## Main files and folders in the project directory
+- ./app contains the core logic of the application. 
+    - /app/Http/Controllers contains the request handling logic.
+    - app/Models contains all the model classes and is where we specify all fillable fields.
+    - app/Providers contains classes which bootstrap the entire application.
+- ./routes/api.php is where we concisely define all of our routes (endpoints).
+- ./tests/Feature contains all the integration tests for the app.
+- ./config/database.php allows you to configure your database connection settings. 
+- ./database is another very important folder.
+    - ./database/factories contains the factory classes which are used to seed the databases.
+    - ./database/migrations allows us to modify our data model
+    - ./databse/seeders contains classes that seed the database via factories.
+
+
+
 
 ## Running the project in your local environment
 First, ensure you have Composer and PHP installed in your machine.
