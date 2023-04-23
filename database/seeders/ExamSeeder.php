@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Exam;
+use Hamcrest\Arrays\IsArray;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,18 +28,21 @@ class JsonSeeder extends Seeder
         $json = Storage::disk('local')->get('/json/candidate_data.json');
         $candidates = json_decode($json, true);
 
-        foreach ($candidates as $candidate)
+        if (is_array($candidates) || is_object($candidates))
         {
-            DB::table('exams')->insert([
-                "title" => $candidate['title'],
-                "description" => $candidate['description'],
-                "candidate_id" => $candidate['candidate_id'],
-                "candidate_name" => $candidate['candidate_name'],
-                "date" => $candidate['date'],
-                "location_name" => $candidate['location_name'],
-                "latitude" => $candidate['latitude'],
-                "longitude" => $candidate['longitude']
-            ]);
+            foreach ($candidates as $candidate)
+            {
+                DB::table('exams')->insert([
+                    "title" => $candidate['title'],
+                    "description" => $candidate['description'],
+                    "candidate_id" => $candidate['candidate_id'],
+                    "candidate_name" => $candidate['candidate_name'],
+                    "date" => $candidate['date'],
+                    "location_name" => $candidate['location_name'],
+                    "latitude" => $candidate['latitude'],
+                    "longitude" => $candidate['longitude']
+                ]);
+            }
         }
     }
 }
