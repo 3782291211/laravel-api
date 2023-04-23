@@ -28,25 +28,5 @@ class AuthServiceProvider extends ServiceProvider
                 );
             }
         }
-        
-        /*Gate::define('view-exams', fn (User $user) => 
-            Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
-        );
-
-        Gate::define('view-users', fn (User $user) => 
-            Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
-        );
-
-        Gate::define('create-exam', fn (User $user) => 
-            Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
-        );
-
-        Gate::define('update-exam', fn (User $user, int $candidateId) => 
-            $user->id === $candidateId || Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
-        );
-
-        Gate::define('delete-exam', fn (User $user, int $candidateId) => 
-            $user->id === $candidateId || Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
-        );*/
     }
 }
