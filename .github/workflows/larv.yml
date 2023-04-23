@@ -13,7 +13,6 @@ jobs:
  
     - name: Install composer dependencies
       run: |
-        chmod -R 755 ./bootstrap/cache/
         composer update
         composer install --no-scripts
  
