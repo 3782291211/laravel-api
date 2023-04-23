@@ -14,7 +14,6 @@ jobs:
     - name: Install composer dependencies
       run: |
         composer update
-        php artisan cache:clear
         composer install --no-scripts
  
     - name: Prepare Laravel Application
