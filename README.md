@@ -1,10 +1,42 @@
-# Laravel & PHP back end project
+# Laravel/PHP back end project
 
-Welcome to another one of my API projects. For this one, I decided to go with Laravel and took advantage of its user authentication and authorisation features, built-in CLI tool and object-relational mapper, as well as its integration testing capabilites to fully test the API's features.
+**[Link to live production build](https://laravel-php-api.vercel.app/public/api)**
+
+Welcome to another one of my API projects. For this project, I have written, tested and deployed a Laravel application as part of a full-stack project, taking advantage of the framework's user authentication and authorisation features, data validation, object-relational mapper, query builder and built-in CLI tool, as well as its integration testing capabilites to fully test the API's features.
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
+## What is it for?
+This API processes data related to users/candidates and their exams. For example, it allows a user to view information about exam venues/locations, dates, candidate names, and so on.
+
+## An important note on access
+Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
+
+Once you have signed up or logged in, you will be issued with an API token which will need to be attached to your request headers in order to ensure full CRUD access.
+
+
+## Available endpoints
+To access each endpint, append the URI fragment to the root endoint.
+You can view further details by visiting the [root endpoint](https://laravel-php-api.vercel.app/public/api).
+
+Resource | Description | Authentication/authorisation
+---|---|---
+POST /signup | Create new account. | Public
+POST /login | Log in to existing account. | Public
+GET /logout/{id} | Log out (revokes tokens). | Logged-in users only
+GET /exams | Shows list of all exams. **Includes optional query strings**. | Admin-only
+GET /exams/{id} | Get specific exam. | Can only see own exams
+PUT /exams/{id} | Modify a specific exam. | Can only edit own exams
+GET /exams/search/{name} | Substring search for specific candidate. | Admin-only
+DELETE /exams/{id} | Delete exam. | Can only delete own exam
+GET /users | Get list of all users. | Admin-only
+GET /users/{id}/exams | Get list of all exams for a user | Can only see own exams
+
+
+
 ## Key product features
+- Deployed on Vercel as a 'Serverless Function', utilising a PHP runtime to handle the applications's configuration.
+- Production deployment is linked to a live PSQL database hosted remotely with a different provider.
 - Expressive Laravel-specific syntax with extensive method-chaining, allowing for more concise code structure.
 - Developed in a test-driven manner using PHPUnit and Laravel's fluent JSON syntax (based on closures and the AssertableJson class).
 - Architected using an object-oriented MVC pattern
@@ -14,3 +46,4 @@ Welcome to another one of my API projects. For this one, I decided to go with La
 - Authorization services implemented using Laravel's gates, a closure-based approach to authorization.
     - Certain actions are only permitted to users with specific roles, such as admin status.
 - Relationships and schema constraints defined using Eloquent ORM's relationships tools
+- SQLite database used for development and testing.
