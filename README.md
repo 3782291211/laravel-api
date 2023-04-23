@@ -39,6 +39,7 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
 - Production deployment is linked to a live PSQL database hosted remotely with a different provider.
 - Expressive Laravel-specific syntax with extensive method-chaining, allowing for more concise code structure.
 - Developed in a test-driven manner using PHPUnit and Laravel's fluent JSON syntax (based on closures and the AssertableJson class).
+- Automated testing with a CI/CD workflow configured using Github Actions.
 - Architected using an object-oriented MVC pattern
 - Authentication services implemented using Sanctum
     - Users are able to sign up and log in.
@@ -47,3 +48,32 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
     - Certain actions are only permitted to users with specific roles, such as admin status.
 - Relationships and schema constraints defined using Eloquent ORM's relationships tools
 - SQLite database used for development and testing.
+
+## Project directory structure
+- The app folder is where the main action is. /app/Http/controllers contains the main logic for handling 
+
+## Running the project in your local environment
+First, ensure you have Composer and PHP installed in your machine.
+
+1) Fork and clone the repository.
+2) cd into the repository and run these CLI commands:
+
+        composer update
+        composer install
+
+3) Rename your ```.env.example``` file to ```.env```, remove the variables for the default mysql connection, and ensure you add the following 3 variables:
+
+        DB_CONNECTION=sqlite
+
+        DB_DATABASE= this needs to be the absolute path to the sqlite database located in ./database/database.sqlite, e.g. /home/username/mydocuments/laravel-api/database/database.sqlite*
+
+        DB_FOREIGN_KEYS=true
+
+4) To spin up the local development server, run the Artisan CLI command:
+        
+        php artisan serve
+
+5) To run the test suit, run the Artisan CLI command:
+
+        php artisan test
+
