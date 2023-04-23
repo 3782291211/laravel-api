@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('candidate_id')->nullable(); #this makes the field optional
             $table->string('candidate_name');
             $table->string('location_name');
-            $table->date('date');
+            $table->dateTime('date');
             $table->decimal('longitude', $precision = 12, $scale = 7);
             $table->decimal('latitude', $precision = 12, $scale = 7);
         });

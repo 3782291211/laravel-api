@@ -24,8 +24,8 @@ class ExamFactory extends Factory
             'candidate_name' => fake()->randomElement(User::pluck('name')),
             'location_name' => fake()->city(),
             'date' => fake()->dateTimeBetween('+0 days', '+4 years'),
-            'longitude' => fake()->unique()->randomFloat(7, 0.0100000, 500.000000000),
-            'latitude' => fake()->unique()->randomFloat(7, 0.0100000, 500.000000000),
+            'longitude' => fake()->unique()->longitude(),
+            'latitude' => fake()->unique()->latitude(),
         ];
     }
 }
