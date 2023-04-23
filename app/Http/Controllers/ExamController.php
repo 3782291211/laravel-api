@@ -32,15 +32,6 @@ class ExamController extends Controller
                 )
                 ->paginate($limit)
         );
-
-        /*
-        return new ExamCollection(
-            Exam::orderBy('date', $order)
-                ->where('location_name', 'like', '%' . $location . '%')
-                ->whereDate('date', 'like', '%' . $date . '%')
-                ->paginate($limit)
-        );
-        */
     }
 
 
@@ -97,7 +88,7 @@ class ExamController extends Controller
     public function search(string $name)
     {
         return new ExamCollection(
-            Exam::where('candidate_name', 'like', '%' . $name . '%')->get()
+            Exam::where('candidate_name', env('USE_SQLITE_SYNTAX', 'ilike'), '%' . $name . '%')->get()
         );
     }
 
