@@ -8,13 +8,12 @@ Welcome to another one of my API projects. For this project, I have written, tes
 
 ## What is it for?
 This API processes data related to users/candidates and their exams. For example, it allows a user to view information about exam venues/locations, dates, candidate names, and so on.
-
-
+<br>
 ## An important note on access
 Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
 
 Once you have signed up or logged in, you will be issued with an API token which will need to be attached to your request headers in order to ensure full CRUD access.
-
+<br>
 
 
 ## Available endpoints
@@ -33,7 +32,7 @@ GET /exams/search/{name} | Substring search for specific candidate. | Admin-only
 DELETE /exams/{id} | Delete exam. | Can only delete own exam
 GET /users | Get list of all users. | Admin-only
 GET /users/{id}/exams | Get list of all exams for a user | Can only see own exams
-
+<br>
 
 
 
@@ -51,7 +50,7 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
     - Certain actions are only permitted to users with specific roles, such as admin status.
 - Relationships and schema constraints defined using Eloquent ORM's relationships tools
 - SQLite database used for development and testing.
-
+<br>
 
 
 ## Main files and folders in the project directory
@@ -66,7 +65,7 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
     - ./database/factories contains the factory classes which are used to seed the databases.
     - ./database/migrations allows us to modify our data model
     - ./databse/seeders contains classes that seed the database via factories.
-
+<br>
 
 
 
@@ -95,3 +94,4 @@ First, ensure you have Composer and PHP installed in your machine.
 
         php artisan test
 
+<br>
