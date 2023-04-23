@@ -37,7 +37,7 @@ return [
 
         'testing' => [
             'driver' => 'sqlite',
-            'database' => '/home/g398g361/northcoders/projects/laravel-api/database/test-database.sqlite',
+            'database' => env('DB_DATABASE', '/__w/laravel-api/laravel-api/phpunit'),
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             // more details on your testing database
         ],
