@@ -2,11 +2,11 @@
 
 **[Link to live production build](https://laravel-php-api.vercel.app/public/api)**
 
-Welcome to another one of my API projects. For this project, I have written, tested and deployed a Laravel application as part of a full-stack project, taking advantage of many of the framework's powerful features including 
-- facades and helper functions,
-- user authentication and authorisation,
-- database seeding,
-- Eloquent ORM query builder,
+Welcome to another one of my API projects. For this project, I have written, tested and deployed a Laravel application as part of a full-stack project, taking advantage of many of the framework's powerful features including:
+- facades and helper functions;
+- user authentication and authorisation;
+- database seeding;
+- Eloquent ORM query builder;
 - advanced API testing tools.
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
