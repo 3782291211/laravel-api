@@ -18,34 +18,34 @@ This API processes data related to users/candidates and their exams. For example
 ## An important note on access
 Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
 
-```json
-// To sign up as an admin, make a POST request to https://laravel-php-api.vercel.app/public/api/signup and include a request body in the following format:
-
-        {
-		    "name": "Anna Torpid",
-		    "email": "annt@v3.admin",
-		    "password": "dfbdf9suhfd9shf",
-		    "password_confirmation": "dfbdf9suhfd9shf"
-        }
-
-// To login, make a POST request to https://laravel-php-api.vercel.app/public/api/login and include a request body in the following format:
-
-        {
-		    "email": "annt@v3.admin",
-		    "password": "dfbdf9suhfd9shf"
-        }
-
-// The above POST request returns this response. Make sure to include the returned token in the authorisation header of all future requests.
-
-        {
-	        "user": {
-		        "id": 11,
-		        "name": "Anna Torpid",
-		        "email": "annt@v3.admin"
-	        },
-	        "token": "5|tAujbY9luWTKquNEruGHU7soCXp7MuzVb8WR0VO9"
-        }
-```
+>```json
+>// To sign up as an admin, make a POST request to https://laravel-php-api.vercel.app/public/api/signup and include a request body in the following format:
+>
+>        {
+>		    "name": "Anna Torpid",
+>		    "email": "annt@v3.admin",
+>		    "password": "dfbdf9suhfd9shf",
+>		    "password_confirmation": "dfbdf9suhfd9shf"
+>        }
+>
+>// To login, make a POST request to https://laravel-php-api.vercel.app/public/api/login and include a request body in the following format:
+>
+>        {
+>		    "email": "annt@v3.admin",
+>		    "password": "dfbdf9suhfd9shf"
+>        }
+>
+>// The above POST request returns this response. Make sure to include the returned token in the authorisation header of all future requests.
+>
+>        {
+>	        "user": {
+>		        "id": 11,
+>		        "name": "Anna Torpid",
+>		        "email": "annt@v3.admin"
+>	        },
+>	        "token": "5|tAujbY9luWTKquNEruGHU7soCXp7MuzVb8WR0VO9"
+>        }
+>```
 
 Once you have signed up or logged in, you will be issued with an API token which will need to be attached to your request headers in order to ensure full CRUD access.
 <br>
@@ -111,23 +111,23 @@ First, ensure you have PHP and Composer installed on your machine.
 1) Fork and clone the repository.
 2) cd into the repository and run these CLI commands:
 
-        composer update
-        composer install
+>        composer update
+>        composer install
 
 3) Rename your ```.env.example``` file to ```.env```, remove the variables for the default mysql connection, and ensure you add the following 3 variables:
 
-        DB_CONNECTION=sqlite
-        DB_FOREIGN_KEYS=true
-        USE_SQLITE_SYNTAX=like
-        DB_DATABASE= this needs to be the absolute path to the sqlite database located in ./database/database.sqlite, e.g. /home/username/mydocuments/laravel-api/database/database.sqlite*
+>        DB_CONNECTION=sqlite
+>        DB_FOREIGN_KEYS=true
+>        USE_SQLITE_SYNTAX=like
+>        DB_DATABASE= this needs to be the absolute path to the sqlite database located in ./database/database.sqlite, e.g. /home/username/mydocuments/laravel-api/database/database.sqlite*
 
 
 4) To spin up the local development server, run the Artisan CLI command:
         
-        php artisan serve
+>        php artisan serve
 
 5) To run the test suit, run the Artisan CLI command:
 
-        php artisan test
+>        php artisan test
 
 <br>
