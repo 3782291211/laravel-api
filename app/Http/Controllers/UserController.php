@@ -20,6 +20,11 @@ class UserController extends Controller
 
     public function userExams(int $id)
     {
+        if (!User::find($id))
+        {
+            return response(['msg' => 'Not found.'], 404);
+        }
+
         return response([
             'exams' => new ExamCollection(
                 Exam::where('candidate_id' , '=', $id)
