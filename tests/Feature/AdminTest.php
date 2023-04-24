@@ -149,6 +149,14 @@ class AdminTest extends TestCase
     }
 
 
+    public function test_get_returns_404_for_nonexistent_user()
+    {
+        $request = $this->get('/api/users/24/exams');
+        $request->assertStatus(404)
+                ->assertExactJson(['msg' => 'Not found.']);
+    }
+
+
     public function test_get_returns_empty_array_when_searching_for_names_not_in_db()
     {
         $response = $this->get('/api/exams/search/374653743');
@@ -162,7 +170,7 @@ class AdminTest extends TestCase
         $response = $this->get('/api/users');
         $response
             ->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json->has('users', 11)
+            ->assertJson(fn (AssertableJson $json) => $json->has('users', 22)
         );
     }
 
