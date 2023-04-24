@@ -14,8 +14,38 @@ Welcome to another one of my API projects. For this project, I have written, tes
 ## What is it for?
 This API processes data related to users/candidates and their exams. For example, it allows a user to view information about exam venues/locations, dates, candidate names, and so on.
 <br>
+
 ## An important note on access
 Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
+
+```json
+// To sign up as an admin, make a POST request to https://laravel-php-api.vercel.app/public/api/signup and include a request body in the following format:
+
+        {
+		    "name": "Anna Torpid",
+		    "email": "annt@v3.admin",
+		    "password": "dfbdf9suhfd9shf",
+		    "password_confirmation": "dfbdf9suhfd9shf"
+        }
+
+// To login, make a POST request to https://laravel-php-api.vercel.app/public/api/login and include a request body in the following format:
+
+        {
+		    "email": "annt@v3.admin",
+		    "password": "dfbdf9suhfd9shf"
+        }
+
+// The above POST request returns this response. Make sure to include the returned token in the authorisation header of all future requests.
+
+        {
+	        "user": {
+		        "id": 11,
+		        "name": "Anna Torpid",
+		        "email": "annt@v3.admin"
+	        },
+	        "token": "5|tAujbY9luWTKquNEruGHU7soCXp7MuzVb8WR0VO9"
+        }
+```
 
 Once you have signed up or logged in, you will be issued with an API token which will need to be attached to your request headers in order to ensure full CRUD access.
 <br>
@@ -75,7 +105,8 @@ GET /users/{id}/exams | Get list of all exams for a user | Can only see own exam
 
 
 ## Running the project in your local environment
-First, ensure you have Composer and PHP installed in your machine.
+First, ensure you have PHP and Composer installed on your machine.
+>Minimum version requiremenets: *PHP ^8.1*; *Composer 2.5.4*.
 
 1) Fork and clone the repository.
 2) cd into the repository and run these CLI commands:
