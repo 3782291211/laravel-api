@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
+use App\Http\Resources\ExamCollection;
 use App\Models\Exam;
 use App\Models\User;
 
@@ -20,9 +21,10 @@ class UserController extends Controller
     public function userExams(int $id)
     {
         return response([
-            'exams' => Exam::where('candidate_id' , '=', $id)
+            'exams' => new ExamCollection(
+                Exam::where('candidate_id' , '=', $id)
                             ->orderBy('date', 'asc')
-                            ->get()
+                            ->get())
         ]);
     }
 }
