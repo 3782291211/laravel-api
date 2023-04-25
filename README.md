@@ -60,7 +60,7 @@ Resource | Description | Authentication/authorisation
 POST /signup | Create new account. | Public
 POST /login | Log in to existing account. | Public
 GET /logout/{id} | Log out (revokes tokens). | Logged-in users only
-GET /exams | Shows list of all exams. **Includes optional query strings**. | Admin-only
+GET /exams | Shows list of all exams. **Includes 4 optional query parameters**. | Admin-only
 GET /exams/{id} | Get specific exam. | Can only see own exams
 PUT /exams/{id} | Modify a specific exam. | Can only edit own exams
 GET /exams/search/{name} | Substring search for specific candidate. | Admin-only

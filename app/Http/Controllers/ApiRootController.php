@@ -38,7 +38,8 @@ class ApiRootController extends Controller
                 'available queries' => [
                     'order' => 'ASC or DESC',
                     'location' => 'Any value accepted',
-                    'date' => 'Must be in this format: 2023-12-13'
+                    'date' => 'Must be in this format: 2023-12-13',
+                    'month' => 'Must be an integer value, e.g. 2, 6, 10, etc'
                 ]
             ],
             'GET /exams/{id}' => [
