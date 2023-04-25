@@ -22,6 +22,7 @@ class ExamController extends Controller
         $location = $request->query('location') ?? '';
         $date = $request->query('date') ?? '';
         $month = $request->query('month') ?? '';
+        $year = $request->query('year') ?? '';
 
         return new ExamCollection(
             Exam::orderBy('date', $order)
@@ -36,7 +37,9 @@ class ExamController extends Controller
                 )
                 ->when($month, fn (Builder $query, string $month) => 
                     $query->whereMonth('date', $month)
-                          ->whereYear('date', strval(date("Y")))
+                )
+                ->when($year, fn (Builder $query, string $year) => 
+                    $query->whereYear('date', $year)
                 )
                 ->paginate($request->query('limit') ?? 30)
         );

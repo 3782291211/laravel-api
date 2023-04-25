@@ -142,7 +142,20 @@ class AdminTest extends TestCase
         $response->assertStatus(200)
                  ->assertJson(fn (AssertableJson $json) =>
                         $json->has('exams.0', fn (AssertableJson $json) =>
-                                $json->where('date', fn (string $date) => Str::of($date)->is('2023-10-*'))
+                                $json->where('date', fn (string $date) => Str::of($date)->is('202*-10-*'))
+                                     ->etc()
+                        )->etc()
+                );
+    }
+
+    public function test_get_allows_exams_to_be_filtered_by_month_and_year()
+    {
+        Exam::factory()->count(4)->create(['date' => '2029-08-04']);
+        $response = $this->get('/api/exams?month=8&year=2029');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams.0', fn (AssertableJson $json) =>
+                                $json->where('date', fn (string $date) => Str::of($date)->is('2029-08-*'))
                                      ->etc()
                         )->etc()
                 );
