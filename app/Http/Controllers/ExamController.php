@@ -60,15 +60,14 @@ class ExamController extends Controller
             "latitude" => 'required|decimal:0,25',
             "longitude" => 'required|decimal:0,25'
         ]);
-        
-        $exams = DB::table('exams')->get();
 
-        if (
-            $exams->contains('candidate_name', $request->candidate_name)
-            && $exams->contains('date', $request->date)
-            && $exams->contains('description', $request->description)
-            && $exams->contains('price', $request->price)
-            )
+        $examFromDb = DB::table('exams')
+                         ->where([
+                            ['candidate_name', '=', $request->candidate_name],
+                            ['date', '=', $request->date]
+                         ])->first();
+                
+        if ($examFromDb)
         {
             return response()->json([
                 'msg' => 'Candidate is already booked in for an exam at this time.'
