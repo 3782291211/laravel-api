@@ -23,7 +23,7 @@ class ExamFactory extends Factory
             'candidate_id' => fake()->randomDigitNotZero(User::pluck('id')),
             'candidate_name' => fake()->randomElement(User::pluck('name')),
             'location_name' => fake()->city(),
-            'date' => fake()->dateTimeBetween('+0 days', '+4 years'),
+            'date' => fake()->dateTimeBetween('+20 days', '+3 years'),
             'longitude' => fake()->unique()->longitude(),
             'latitude' => fake()->unique()->latitude(),
         ];
