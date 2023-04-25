@@ -221,7 +221,7 @@ class AdminTest extends TestCase
             "title" => "VICTVS15",
             "description" => "VICTVS Exam 15",
             "candidate_id" => 0,
-            "candidate_name" => "Wilmers",
+            "candidate_name" => "Kardo",
             "date" => "05/05/2023 14:30:00",
             "location_name" => "London",
             "latitude" => 51.50374306483545,
@@ -234,6 +234,38 @@ class AdminTest extends TestCase
             ->assertStatus(201)
             ->assertJson($newExam);
    
+    }
+
+    public function test_post_does_not_allow_multiple_exams_to_be_created_in_same_time_slot()
+    {
+        $newExam =   [
+            "title" => "VICTVS15",
+            "description" => "VICTVS Exam 15",
+            "candidate_id" => 0,
+            "candidate_name" => "Wilmers",
+            "date" => "05/05/2023 14:30:00",
+            "location_name" => "London",
+            "latitude" => 51.50374306483545,
+            "longitude" => -0.14074641294861687
+        ];
+
+        $newExam2 =   [
+            "title" => "VICTVS16",
+            "description" => "VICTVS Exam 16",
+            "candidate_id" => 0,
+            "candidate_name" => "Wilmers",
+            "date" => "05/05/2023 14:30:00",
+            "location_name" => "Sydney",
+            "latitude" => 51.50374306483545,
+            "longitude" => -0.14074641294861687
+        ];
+        
+        $this->postJson('/api/exams', $newExam);
+        $response = $this->postJson('/api/exams', $newExam2);
+
+        $response->assertStatus(400)
+                 ->assertExactJson(['msg' => 'Candidate is already booked in for an exam at this time.']);
+
     }
 
 
