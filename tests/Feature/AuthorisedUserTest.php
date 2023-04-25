@@ -21,7 +21,27 @@ class AuthorisedUserTest extends TestCase
         $request = ['candidate_name' => 'Donald Donaldson'];
         $response = $this->putJson('/api/exams/' . $exam->id, $request);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) => 
+                        $json->where('candidate_name','Donald Donaldson')
+                             ->etc()
+    );
+    }
+
+    public function test_get_authorised_user_can_view_single_exam()
+    {
+        $user = User::factory()->has(Exam::factory()->count(4))->create();
+        $examId = Exam::where('candidate_id', $user->id)->first()->id;
+
+        $this->actingAs($user);
+        $response = $this->get('api/exams/' . $examId);
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) => 
+                    $json->has('exam', fn (AssertableJson $json) => 
+                          $json->hasAll('id', 'title', 'description', 'candidateId')
+                               ->etc()
+                        )
+    );
     }
 
 
@@ -40,6 +60,7 @@ class AuthorisedUserTest extends TestCase
                 );
     }
 
+
     public function test_delete_authorised_candidate_can_delete_own_exams()
     {
         $user = User::factory()->create();
@@ -55,6 +76,16 @@ class AuthorisedUserTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
         $response = $this->get('/api/exams/3333333');
+        $response->assertStatus(404)
+                 ->assertExactJson(['msg' => 'Not found.']);
+    }
+
+
+    public function test_put_returns_404_for_nonexistent_exam()
+    {
+        $this->actingAs(User::factory()->create());
+        $request = ['candidate_name' => 'Donald Donaldson'];
+        $response = $this->putJson('/api/exams/333333343434343', $request);
         $response->assertStatus(404)
                  ->assertExactJson(['msg' => 'Not found.']);
     }
