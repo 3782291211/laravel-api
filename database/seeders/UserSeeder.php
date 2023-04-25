@@ -15,10 +15,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()
-            ->count(21)
+            ->count(42)
             ->has(
                 Exam::factory()
-                        ->count(fake()->numberBetween(2, 22))
+                        ->count(fake()->numberBetween(2, 15))
                         ->state(fn (array $attributes, User $user) => 
                             [
                                 'candidate_id' => $user->id,
