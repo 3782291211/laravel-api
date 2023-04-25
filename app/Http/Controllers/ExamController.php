@@ -84,7 +84,7 @@ class ExamController extends Controller
     public function show(string $id)
     {
         $exam = Exam::find($id);
-        if (!$exam || !Gate::allows('view-exams', $exam->candidate_id)) {
+        if (!$exam || !Gate::allows('view-single-exam', $exam->candidate_id)) {
             return response(['msg' => 'Not found.'], 404);
         }
 

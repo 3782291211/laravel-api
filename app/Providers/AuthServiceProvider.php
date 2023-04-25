@@ -15,10 +15,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $actions = ['view-exams', 'view-users', 'create-exam', 'update-exam', 'delete-exam'];
+        $actions = ['view-exams', 'view-users', 'create-exam', 'view-single-exam', 'update-exam', 'delete-exam'];
         foreach ($actions as $action)
         {
-            if ($action === 'update-exam' || $action === 'delete-exam') {
+            if ($action === 'update-exam' || $action === 'delete-exam' || $action === 'view-single-exam') {
                 Gate::define($action, fn (User $user, int $candidateId) => 
                     $user->id === $candidateId || Str::of($user->email)->endsWith('@v3.admin') ? Response::allow() : Response::deny()
                 );
