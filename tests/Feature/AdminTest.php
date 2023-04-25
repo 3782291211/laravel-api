@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use App\Models\Exam;
+use Illuminate\Support\Str;
 
 class AdminTest extends TestCase
 {
@@ -134,6 +135,19 @@ class AdminTest extends TestCase
                 );
     }
 
+    public function test_get_allows_exams_to_be_filtered_by_month()
+    {
+        Exam::factory()->count(4)->create(['date' => '2023-10-19']);
+        $response = $this->get('/api/exams?month=10');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams.0', fn (AssertableJson $json) =>
+                                $json->where('date', fn (string $date) => Str::of($date)->is('2023-10-*'))
+                                     ->etc()
+                        )->etc()
+                );
+    }
+
     public function test_get_allows_exams_to_be_filtered_by_date_and_location()
     {
         Exam::factory()->count(6)->create(['date' => '2021-12-14', 'location_name' => 'glasgow']);
@@ -151,7 +165,7 @@ class AdminTest extends TestCase
 
     public function test_get_returns_404_for_nonexistent_user()
     {
-        $request = $this->get('/api/users/24/exams');
+        $request = $this->get('/api/users/44/exams');
         $request->assertStatus(404)
                 ->assertExactJson(['msg' => 'Not found.']);
     }
@@ -170,7 +184,7 @@ class AdminTest extends TestCase
         $response = $this->get('/api/users');
         $response
             ->assertStatus(200)
-            ->assertJson(fn (AssertableJson $json) => $json->has('users', 22)
+            ->assertJson(fn (AssertableJson $json) => $json->has('users', 43)
         );
     }
 
