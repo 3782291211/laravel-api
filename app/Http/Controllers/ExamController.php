@@ -21,6 +21,7 @@ class ExamController extends Controller
         $limit = $request->query('limit') ?? 30;
         $location = $request->query('location') ?? '';
         $date = $request->query('date') ?? '';
+        $month = $request->query('month') ?? '';
 
         return new ExamCollection(
             Exam::orderBy('date', $order)
@@ -28,7 +29,11 @@ class ExamController extends Controller
                     $query->where('location_name', env('USE_SQLITE_SYNTAX', 'ilike'), '%' . $location . '%')
                 )
                 ->when($date, fn (Builder $query, string $date) => 
-                    $query->whereDate('date', 'like', '%' . $date . '%')
+                    $query->whereDate('date', $date)
+                )
+                ->when($month, fn (Builder $query, string $month) => 
+                    $query->whereMonth('date', $month)
+                          ->whereYear('date', strval(date("Y")))
                 )
                 ->paginate($limit)
         );
