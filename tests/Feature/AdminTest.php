@@ -148,6 +148,19 @@ class AdminTest extends TestCase
                 );
     }
 
+    public function test_get_allows_exams_to_be_filtered_by_name()
+    {
+        Exam::factory()->count(14)->create(['candidate_name' => 'John Abruzzi']);
+        $response = $this->get('/api/exams?name=abruzz');
+        $response->assertStatus(200)
+                 ->assertJson(fn (AssertableJson $json) =>
+                        $json->has('exams', 14, fn (AssertableJson $json) =>
+                                $json->where('candidateName', 'John Abruzzi')
+                                     ->etc()
+                        )->etc()
+                );
+    }
+
     public function test_get_allows_exams_to_be_filtered_by_date_and_location()
     {
         Exam::factory()->count(6)->create(['date' => '2021-12-14', 'location_name' => 'glasgow']);

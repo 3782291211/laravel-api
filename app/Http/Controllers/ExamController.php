@@ -19,12 +19,16 @@ class ExamController extends Controller
 
         $order = $request->query('order') ?? 'DESC';
         $limit = $request->query('limit') ?? 30;
+        $name = $request->query('name') ?? '';
         $location = $request->query('location') ?? '';
         $date = $request->query('date') ?? '';
         $month = $request->query('month') ?? '';
 
         return new ExamCollection(
             Exam::orderBy('date', $order)
+                ->when($name, fn (Builder $query, string $name) => 
+                    $query->where('candidate_name', env('USE_SQLITE_SYNTAX', 'ilike'), '%' . $name . '%')
+                )
                 ->when($location, fn (Builder $query, string $location) => 
                     $query->where('location_name', env('USE_SQLITE_SYNTAX', 'ilike'), '%' . $location . '%')
                 )
