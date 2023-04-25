@@ -18,7 +18,6 @@ class ExamController extends Controller
         }
 
         $order = $request->query('order') ?? 'DESC';
-        $limit = $request->query('limit') ?? 30;
         $name = $request->query('name') ?? '';
         $location = $request->query('location') ?? '';
         $date = $request->query('date') ?? '';
@@ -39,7 +38,7 @@ class ExamController extends Controller
                     $query->whereMonth('date', $month)
                           ->whereYear('date', strval(date("Y")))
                 )
-                ->paginate($limit)
+                ->paginate($request->query('limit') ?? 30)
         );
     }
 
