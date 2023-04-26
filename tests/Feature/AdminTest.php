@@ -217,11 +217,12 @@ class AdminTest extends TestCase
 
     public function test_post_request_adds_exam_to_database(): void
     {
+        $user = User::factory()->create();
         $newExam =   [
             "title" => "VICTVS15",
             "description" => "VICTVS Exam 15",
-            "candidate_id" => 0,
-            "candidate_name" => "Kardo",
+            "candidate_id" => $user->id,
+            "candidate_name" => $user->name,
             "date" => "05/05/2023 14:30:00",
             "location_name" => "London",
             "latitude" => 51.50374306483545,
@@ -238,11 +239,12 @@ class AdminTest extends TestCase
 
     public function test_post_does_not_allow_multiple_exams_to_be_created_in_same_time_slot()
     {
+        $user = User::factory()->create();
         $newExam =   [
             "title" => "VICTVS15",
             "description" => "VICTVS Exam 15",
-            "candidate_id" => 0,
-            "candidate_name" => "Wilmers",
+            "candidate_id" => $user->id,
+            "candidate_name" => $user->name,
             "date" => "05/05/2023 14:30:00",
             "location_name" => "London",
             "latitude" => 51.50374306483545,
@@ -252,8 +254,8 @@ class AdminTest extends TestCase
         $newExam2 =   [
             "title" => "VICTVS16",
             "description" => "VICTVS Exam 16",
-            "candidate_id" => 0,
-            "candidate_name" => "Wilmers",
+            "candidate_id" => $user->id,
+            "candidate_name" => $user->name,
             "date" => "05/05/2023 14:30:00",
             "location_name" => "Sydney",
             "latitude" => 51.50374306483545,
@@ -269,7 +271,7 @@ class AdminTest extends TestCase
     }
 
 
-    public function test_post_returns_404_if_foreign_key_does_not_match_primary_key()
+    public function test_post_returns_400_if_foreign_key_does_not_match_primary_key()
     {
         $user = User::find(2);
         $request = [
@@ -287,6 +289,25 @@ class AdminTest extends TestCase
         $response->assertStatus(400)
                  ->assertExactJson(['msg' => 'Candidate\'s ID does not match his/her existing ID on record.']);
 
+    }
+
+
+    public function test_post_returns_404_if_attempting_to_create_a_new_exam_for_a_nonexistent_user()
+    {
+        $request = [
+            "title" => "VICTVS15",
+            "description" => "VICTVS Exam 15",
+            "candidate_id" => 47,
+            "candidate_name" => "Daniel Polt",
+            "date" => "05/05/2024 14:30:00",
+            "location_name" => "London",
+            "latitude" => 51.50374306483545,
+            "longitude" => -0.14074641294861687
+        ];
+
+        $response = $this->postJson('/api/exams', $request);
+        $response->assertStatus(404)
+                 ->assertExactJson(['msg' => 'That user does not exist in the database.']);
     }
 
     public function test_put_admin_can_update_any_exam(): void

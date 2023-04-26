@@ -70,13 +70,19 @@ class ExamController extends Controller
         
         $userFromDb = User::where('id', $request->candidate_id)->first();
 
-        if ($examFromDb)
+        if (!$userFromDb)
+        {
+            return response()->json([
+                'msg' => 'That user does not exist in the database.'
+            ], 404);
+        }
+        else if ($examFromDb)
         {
             return response()->json([
                 'msg' => 'Candidate is already booked in for an exam at this time.'
             ], 400);
         }
-        else if ($userFromDb && $userFromDb->name != $request->candidate_name)
+        else if ($userFromDb->name != $request->candidate_name)
         {
             return response()->json([
                 'msg' => 'Candidate\'s ID does not match his/her existing ID on record.'
