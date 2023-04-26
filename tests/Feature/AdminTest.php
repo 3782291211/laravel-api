@@ -269,6 +269,26 @@ class AdminTest extends TestCase
     }
 
 
+    public function test_post_returns_404_if_foreign_key_does_not_match_primary_key()
+    {
+        $user = User::find(2);
+        $request = [
+            "title" => "VICTVS15",
+            "description" => "VICTVS Exam 15",
+            "candidate_id" => 2,
+            "candidate_name" => $user->name . "let's violate the schema constraint",
+            "date" => "05/05/2024 14:30:00",
+            "location_name" => "London",
+            "latitude" => 51.50374306483545,
+            "longitude" => -0.14074641294861687
+        ];
+
+        $response = $this->postJson('/api/exams', $request);
+        $response->assertStatus(400)
+                 ->assertExactJson(['msg' => 'Candidate\'s ID does not match his/her existing ID on record.']);
+
+    }
+
     public function test_put_admin_can_update_any_exam(): void
     {
         $response = $this->putJson('/api/exams/12', [
