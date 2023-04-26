@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Exam;
+use App\Models\User;
 use App\Http\Resources\ExamResource;
 use App\Http\Resources\ExamCollection;
 use Illuminate\Support\Facades\Gate;
@@ -66,11 +67,19 @@ class ExamController extends Controller
                             ['candidate_name', '=', $request->candidate_name],
                             ['date', '=', $request->date]
                          ])->first();
-                
+        
+        $userFromDb = User::where('id', $request->candidate_id)->first();
+
         if ($examFromDb)
         {
             return response()->json([
                 'msg' => 'Candidate is already booked in for an exam at this time.'
+            ], 400);
+        }
+        else if ($userFromDb && $userFromDb->name != $request->candidate_name)
+        {
+            return response()->json([
+                'msg' => 'Candidate\'s ID does not match his/her existing ID on record.'
             ], 400);
         }
         else
