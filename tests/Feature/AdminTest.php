@@ -9,6 +9,7 @@ use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use App\Models\Exam;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AdminTest extends TestCase
 {
@@ -159,6 +160,17 @@ class AdminTest extends TestCase
                                      ->etc()
                         )->etc()
                 );
+    }
+
+    public function test_get_allows_exams_to_be_filtered_to_dates_occurring_after_specified_query()
+    {
+        Exam::factory()->count(10)->create();
+        $response = $this->get('/api/exams?after=' . Carbon::now());
+        $response->assertStatus(200);
+        foreach($response['exams'] as $exam)
+        {
+            $this->assertTrue(Carbon::parse($exam['date']) > Carbon::now());
+        }
     }
 
     public function test_get_allows_exams_to_be_filtered_by_name()
