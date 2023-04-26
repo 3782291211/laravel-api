@@ -44,7 +44,7 @@ class ExamController extends Controller
                     $query->whereYear('date', $year)
                 )
                 ->when($after, fn (Builder $query, string $after) => 
-                    $query->whereYear('date', '>', $after)
+                    $query->whereDate('date', '>', $after)
                 )
                 ->paginate($request->query('limit') ?? 30)
         );
