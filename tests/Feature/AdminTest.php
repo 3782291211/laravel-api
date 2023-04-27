@@ -299,7 +299,7 @@ class AdminTest extends TestCase
 
         $response = $this->postJson('/api/exams', $request);
         $response->assertStatus(400)
-                 ->assertExactJson(['msg' => 'Candidate\'s ID does not match his/her existing ID on record.']);
+                 ->assertExactJson(['msg' => 'Candidate\'s name does not match his/her existing name on record.']);
 
     }
 
