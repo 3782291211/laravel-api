@@ -130,6 +130,10 @@ class ExamController extends Controller
             return response(['msg' => 'Not found.'], 404);
         }
 
+        if ($request->filled('candidate_name') || $request->filled('candidate_id')){
+            return response(['msg' => 'You cannot change a candidate\'s name or ID.'], 400);
+        }
+
         $exam->update($request->all());
         return $exam;
     }

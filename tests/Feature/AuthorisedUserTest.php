@@ -18,14 +18,41 @@ class AuthorisedUserTest extends TestCase
         $exam = Exam::factory()->create(['candidate_id' => $user->id]);
         $this->actingAs($user);
         
-        $request = ['candidate_name' => 'Donald Donaldson'];
+        $request = ['location_name' => 'Mars'];
         $response = $this->putJson('/api/exams/' . $exam->id, $request);
 
         $response->assertStatus(200)
                  ->assertJson(fn (AssertableJson $json) => 
-                        $json->where('candidate_name','Donald Donaldson')
+                        $json->where('location_name','Mars')
                              ->etc()
     );
+    }
+
+    public function test_put_prevents_updates_to_id_field()
+    {
+        $user = User::factory()->create(['name' => 'Jackson Bubblebeard']);
+        $exam = Exam::factory()->create(['candidate_id' => $user->id]);
+        $this->actingAs($user);
+        
+        $request = ['candidate_id' => 16];
+        $response = $this->putJson('/api/exams/' . $exam->id, $request);
+
+        $response->assertStatus(400)
+                 ->assertExactJson(['msg' => 'You cannot change a candidate\'s name or ID.']);
+    }
+
+
+    public function test_put_prevents_updates_to_candidate_name_field()
+    {
+        $user = User::factory()->create(['name' => 'Jackson Bubblebeard']);
+        $exam = Exam::factory()->create(['candidate_id' => $user->id]);
+        $this->actingAs($user);
+        
+        $request = ['candidate_name' => 'John Ferman'];
+        $response = $this->putJson('/api/exams/' . $exam->id, $request);
+
+        $response->assertStatus(400)
+                 ->assertExactJson(['msg' => 'You cannot change a candidate\'s name or ID.']);
     }
 
     public function test_get_authorised_user_can_view_single_exam()
