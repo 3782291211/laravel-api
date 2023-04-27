@@ -89,7 +89,7 @@ class ExamController extends Controller
         else if ($userFromDb->name != $request->candidate_name)
         {
             return response()->json([
-                'msg' => 'Candidate\'s name does not match his/her existing name on record.'
+                'msg' => 'Candidate\'s name does not match his or her existing name on record.'
             ], 400);
         }
         else
