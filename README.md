@@ -16,7 +16,8 @@ This API processes data related to users/candidates and their exams. For example
 <br>
 
 ## An important note on access
-Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
+- Ensure that you include an **Accept: application/json** HTTP header with all requests to the API.
+- Most of the API's features are only available to admin-level users. To experiment with this app, you can sign up for a new account using an email that ends with **@v3.admin** which will give you full admin privileges.
 
 ```json
 // To sign up as an admin, make a POST request to https://laravel-php-api.vercel.app/public/api/signup and include a request body in the following format:
